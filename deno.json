@@ -1,0 +1,11 @@
+{
+  "name": "@savory/handlebars",
+  "version": "0.0.1",
+  "exports": "./mod.ts",
+  "imports": {
+    "handlebars": "npm:handlebars@4.7.7",
+    "@std/fs": "jsr:@std/fs@0.181.0",
+    "@std/path": "jsr:@std/path@0.181.0",
+    "@std/testing": "jsr:@std/testing@0.80.0"
+  }
+}
