@@ -1,5 +1,5 @@
 {
-  "name": "@savory/handlebars",
+  "name": "@danet/handlebars",
   "version": "0.0.1",
   "exports": "./mod.ts",
   "imports": {
