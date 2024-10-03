@@ -9,6 +9,19 @@ const { readFile } = Deno;
 
 export { HandlebarsJS };
 
+/**
+ * Configuration options for Handlebars.
+ *
+ * @interface HandlebarsConfig
+ * @property {string} baseDir - The base directory for templates.
+ * @property {string} extname - The file extension for templates.
+ * @property {string} layoutsDir - The directory for layout templates.
+ * @property {string} partialsDir - The directory for partial templates.
+ * @property {boolean} [cachePartials] - Whether to cache partial templates.
+ * @property {string} defaultLayout - The default layout template.
+ * @property {any} helpers - An object containing helper functions.
+ * @property {any} compilerOptions - Options for the Handlebars compiler.
+ */
 export interface HandlebarsConfig {
   baseDir: string;
   extname: string;
@@ -37,9 +50,31 @@ function getNormalizePath(path: string) {
   return normalize(path).replace(/\\/g, "/");
 }
 
+/**
+ * Provides methods to render views and manage partials using Handlebars templates.
+ * 
+ * @remarks
+ * This class is designed to work with the Handlebars templating engine and provides functionality to register helpers, render views with or without layouts, and manage partials.
+ * 
+ * @example
+ * ```typescript
+ * const handlebars = new Handlebars();
+ * const renderedView = await handlebars.renderView('index', { title: 'Home' });
+ * console.log(renderedView);
+ * ```
+ * 
+ * @public
+ */
 export class Handlebars {
   #havePartialsBeenRegistered = false;
 
+  /**
+   * Creates an instance of the class with the provided configuration.
+   * Merges the provided configuration with the default configuration.
+   * Registers any helpers specified in the configuration with Handlebars.
+   *
+   * @param config - The configuration object for Handlebars. Defaults to `DEFAULT_HANDLEBARS_CONFIG`.
+   */
   constructor(private config: HandlebarsConfig = DEFAULT_HANDLEBARS_CONFIG) {
     this.config = { ...DEFAULT_HANDLEBARS_CONFIG, ...config };
 
@@ -58,11 +93,12 @@ export class Handlebars {
   }
 
   /**
-     * Processes of rendering view
-     *
-     * @param view
-     * @param context
-     * @param layout
+     * Renders a view with an optional layout.
+     * 
+     * @param {string} view - The name of the view to render.
+     * @param {Record<string, unknown>} [context] - The data to pass to the view.
+     * @param {string} [layout] - The name of the layout to use.
+     * @returns {Promise<string>} The rendered view.
      */
   public async renderView(
     view: string,
@@ -99,7 +135,11 @@ export class Handlebars {
   }
 
   /**
-     * Processes on render without partials and layouts
+     * Renders a partial template.
+     * 
+     * @param {string} partial - The name of the partial template.
+     * @param {Record<string, unknown>} [context] - The data to pass to the partial template.
+     * @returns {Promise<string>} The rendered partial template.
      */
   public async render(
     path: string,
@@ -116,9 +156,6 @@ export class Handlebars {
     return template(context);
   }
 
-  /**
-     * Processes on register partials
-     */
   private async registerPartials() {
     const paths = await this.getTemplatesPath(
       join(this.config.baseDir, this.config.partialsDir),
@@ -142,9 +179,6 @@ export class Handlebars {
     this.#havePartialsBeenRegistered = true;
   }
 
-  /**
-     * Gets template pathes with glob match
-     */
   private async getTemplatesPath(path: string): Promise<string[]> {
     const arr: string[] = [];
 
