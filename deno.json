@@ -1,6 +1,6 @@
 {
   "name": "@danet/handlebars",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "exports": "./mod.ts",
   "imports": {
     "handlebars": "npm:handlebars@4.7.7",
