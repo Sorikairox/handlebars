@@ -7,7 +7,7 @@ Official handlebars docs: [Guide](https://handlebarsjs.com/guide)
 ### How to use renderer
 
 ```ts
-import { Handlebars, HandlebarsConfig } from 'https://deno.land/x/handlebars/mod.ts';
+import { Handlebars, HandlebarsConfig } from "jsr:@danet/handlebars";
 
 // First, create instance of Handlebars
 
@@ -30,8 +30,17 @@ const DEFAULT_HANDLEBARS_CONFIG: HandlebarsConfig = {
     compilerOptions: undefined,
 };
 
-// Then render page to string
-const result: string = await handle.renderView('index', { name: 'Alosaur' });
+// then render page
+import { Application, Router } from 'jsr:@oak/oak';
+const app = new Application();
+const router = new Router();
+app.use(async function(ctx, next) {
+    ctx.state.handlebars = new Handlebars();
+    await next();
+});
+router.get('/', async function(ctx) {
+    ctx.response.body = await ctx.state.handlebars.renderView('index', { name: 'Alosaur' });
+);
 ```
 
 #### Rendering in development mode
